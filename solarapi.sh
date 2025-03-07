@@ -17,6 +17,10 @@ P_Akku=$(echo "$RESPONSE" | jq -r '.Body.Data.Site.P_Akku')
 P_Grid=$(echo "$RESPONSE" | jq -r '.Body.Data.Site.P_Grid')
 P_Load=$(echo "$RESPONSE" | jq -r '.Body.Data.Site.P_Load')
 P_PV=$(echo "$RESPONSE" | jq -r '.Body.Data.Site.P_PV')
+echo "${P_Akku%%.*} P_Akku"
+echo "${P_Grid%%.*} P_Grid"
+echo "${P_Load%%.*} P_Load"
+echo "${P_PV%%.*} P_PV"
 
 # Überprüfen, ob der Wert erfolgreich extrahiert wurde
 #if [ "$VALUE" == "null" ] || [ -z "$VALUE" ]; then
@@ -38,9 +42,10 @@ if [ -z "$RESPONSE" ]; then
     exit 1
 fi
 
-P_Balkon=$(echo "$RESPONSE" | jq -r '.ch[0][0]')
-### Todo 2. Index suchen
+P_Balkon=$(echo "$RESPONSE" | jq -r '.ch[0][2]')
+echo "${P_Balkon%%.*} P_Balkon"
 
 
 # Den extrahierten Wert ausgeben
-echo "Der zurückgegebene Wert ist: $VALUE"
+#echo "Der zurückgegebene Wert ist: $VALUE"
+
