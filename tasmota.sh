@@ -15,9 +15,9 @@ fi
 # Einen spezifischen Wert aus der JSON-Antwort extrahieren (z.B. 'value')
 P_Grid=$(echo "$RESPONSE" | jq -r '.Body.Data.Site.P_Grid')
 
-I_P_Grid=${P_Akku%%.*}
+I_P_Grid=${P_Grid%%.*}
 
-if [[ $I_P_Grid -lt -100 ]]; then
+if [[ $I_P_Grid -lt -150 ]]; then
     curl 'http://10.0.0.113/cm?user=admin&password=admin&cmnd=Power%20On'
     echo eingeschaltet
 else
