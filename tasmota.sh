@@ -13,14 +13,14 @@ if [ -z "$RESPONSE" ]; then
 fi
 
 # Einen spezifischen Wert aus der JSON-Antwort extrahieren (z.B. 'value')
-P_Akku=$(echo "$RESPONSE" | jq -r '.Body.Data.Site.P_Akku')
+P_Grid=$(echo "$RESPONSE" | jq -r '.Body.Data.Site.P_Grid')
 
-I_P_Akkuecho=${P_Akku%%.*}
+I_P_Grid=${P_Akku%%.*}
 
-if [[ $I_P_Akkuecho -lt -100 ]]; then
-    #curl http://10.0.0.113/cm?user=admin&password=admin&cmnd=Power%20On
+if [[ $I_P_Grid -lt -100 ]]; then
+    curl 'http://10.0.0.113/cm?user=admin&password=admin&cmnd=Power%20On'
     echo eingeschaltet
 else
-    #curl http://10.0.0.113/cm?user=admin&password=admin&cmnd=Power%20Off
+    curl 'http://10.0.0.113/cm?user=admin&password=admin&cmnd=Power%20Off'
     echo ausgeschaltet
 fi
