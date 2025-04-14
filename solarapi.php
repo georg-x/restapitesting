@@ -19,7 +19,7 @@ function fetchData($url) {
 }
 
 // API-URL für das erste Gerät
-$apiUrl1 = "http://10.0.0.76/solar_api/v1/GetPowerFlowRealtimeData.fcgi";
+$apiUrl1 = "http://fronius/solar_api/v1/GetPowerFlowRealtimeData.fcgi";
 $data1 = fetchData($apiUrl1);
 
 $pAkku = $pGrid = $pLoad = $pPV = $pBalkon = $soc = 'N/A';
@@ -32,7 +32,7 @@ if ($data1) {
 }
 
 // API-URL für das zweite Gerät
-$apiUrl2 = "http://10.0.0.66/api/inverter/id/0";
+$apiUrl2 = "http://AHOY-DTU/api/inverter/id/0";
 $data2 = fetchData($apiUrl2);
 
 if ($data2) {
@@ -40,12 +40,29 @@ if ($data2) {
 }
 
 // API-URL für das dritte Gerät (Speicher)
-$apiUrl3 = "http://10.0.0.76/solar_api/v1/GetStorageRealtimeData.cgi";
+$apiUrl3 = "http://fronius/solar_api/v1/GetStorageRealtimeData.cgi";
 $data3 = fetchData($apiUrl3);
 
 if ($data3) {
     $soc = isset($data3['Body']['Data'][0]['Controller']['StateOfCharge_Relative']) ? $data3['Body']['Data'][0]['Controller']['StateOfCharge_Relative'] : 'N/A';
 }
+
+// API-URL einzelne PV Stränge
+$apiUrl4 = "http://fronius/solar_api/v1/GetInverterRealtimeData.cgi?Scope=Device&DeviceId=1&DataCollection=CommonInverterData";
+$data4 = fetchData($apiUrl4);
+
+if ($data4) {
+    $I_PV1 = isset($data3['Body']['Data']['IDC']) ? $data3['Body']['Data']['IDC'] : 'N/A';
+    $I_PV2 = isset($data3['Body']['Data']['IDC_2']) ? $data3['Body']['Data']['IDC_2'] : 'N/A';
+    $U_PV1 = isset($data3['Body']['Data']['UDC']) ? $data3['Body']['Data']['UDC'] : 'N/A';
+    $U_PV2 = isset($data3['Body']['Data']['UDC_2']) ? $data3['Body']['Data']['UDC_2'] : 'N/A';
+    $P_PV1 = (float)$I_PV1 * (float)$U_PV1;
+    $P_PV2 = (float)$I_PV2 * (float)$U_PV2;
+}
+
+$timestamp = time();
+$formattedDate = date('Y-m-d H:i:s', $timestamp);
+echo $formattedDate;
 
 ?>
 <!DOCTYPE html>
@@ -65,14 +82,17 @@ if ($data3) {
     <table>
         <tr>
             <th>Parameter</th>
-            <th>Wert (abgerundet)</th>
+            <th>Wert</th>
+            <th>W/kWp</th>
         </tr>
         <tr><td>P_Akku</td><td><?= $pAkku ?></td></tr>
         <tr><td>P_Grid</td><td><?= $pGrid ?></td></tr>
         <tr><td>P_Load</td><td><?= $pLoad ?></td></tr>
-        <tr><td>P_PV</td><td><?= $pPV ?></td></tr>
-        <tr><td>P_Balkon</td><td><?= $pBalkon ?></td></tr>
+        <tr><td>P_PV_AC</td><td><?= $pPV ?></td></tr>
+        <tr><td>P_Balkon_AC</td><td><?= $pBalkon ?></td><td><?= $pBalkon/1.2?></td></tr>
         <tr><td>SoC</td><td><?= $soc ?>%</td></tr>
+        <tr><td>P_PV1</td><td><?= $P_PV1 ?></td><td><?= $P_PV1/3.96 ?></td></tr>
+        <tr><td>P_PV2</td><td><?= $P_PV2 ?></td><td><?= $P_PV2/6.3  ?></td></tr>
     </table>
 </body>
 </html>
