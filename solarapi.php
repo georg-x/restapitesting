@@ -89,7 +89,7 @@ echo $formattedDate;
         <tr><td>P_Grid</td><td><?= $pGrid ?></td><td>negativer Wert = Einspeisung</td></tr>
         <tr><td>P_Load</td><td><?= $pLoad ?></td><td>PowerLoad general W Power flowing from inverter to the consumer</td></tr>
         <tr><td>SoC-internal</td><td><?= $soc ?>%</td><td><?= round($soc/100*2.76*6,2)?> kW</tr>
-        <tr><td>SoC-real</td><td><?= round(($soc - 9) / 91 * 100, 2) ?>%</td><td><?= round(((($soc - 9) / 91 * 100) / 100 * (2.76*6 * 0.91)), 2) ?> kW</tr>
+        <!--<tr><td>SoC-real</td><td><?= round(($soc - 9) / 91 * 100, 2) ?>%</td><td><?= round(((($soc - 9) / 91 * 100) / 100 * (2.76*6 * 0.91)), 2) ?> kW</tr>-->
         <tr><td>P_PV_AC</td><td><?= $pPV ?></td><td><?= round($pPV/10.26,0)?> W/kWp</td></tr>
         <tr><td>P_Balkon_AC</td><td><?= $pBalkon ?></td><td><?= round($pBalkon/1.2,0)?> W/kWp</td></tr>
         <tr><td>P_PV1</td><td><?= round($P_PV1,0) ?></td><td><?= round($P_PV1/3.96,0) ?> W/kWp</td></tr>
