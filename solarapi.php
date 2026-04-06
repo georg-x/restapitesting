@@ -52,10 +52,10 @@ $apiUrl4 = "http://fronius/solar_api/v1/GetInverterRealtimeData.cgi?Scope=Device
 $data4 = fetchData($apiUrl4);
 
 if ($data4) {
-    $I_PV1 = isset($data3['Body']['Data']['IDC']) ? $data3['Body']['Data']['IDC'] : 'N/A';
-    $I_PV2 = isset($data3['Body']['Data']['IDC_2']) ? $data3['Body']['Data']['IDC_2'] : 'N/A';
-    $U_PV1 = isset($data3['Body']['Data']['UDC']) ? $data3['Body']['Data']['UDC'] : 'N/A';
-    $U_PV2 = isset($data3['Body']['Data']['UDC_2']) ? $data3['Body']['Data']['UDC_2'] : 'N/A';
+    $I_PV1 = isset($data4['Body']['Data']['IDC']['Value']) ? $data4['Body']['Data']['IDC']['Value'] : 'N/A';
+    $I_PV2 = isset($data4['Body']['Data']['IDC_2']['Value']) ? $data4['Body']['Data']['IDC_2']['Value'] : 'N/A';
+    $U_PV1 = isset($data4['Body']['Data']['UDC']['Value']) ? $data4['Body']['Data']['UDC']['Value'] : 'N/A';
+    $U_PV2 = isset($data4['Body']['Data']['UDC_2']['Value']) ? $data4['Body']['Data']['UDC_2']['Value'] : 'N/A';
     $P_PV1 = (float)$I_PV1 * (float)$U_PV1;
     $P_PV2 = (float)$I_PV2 * (float)$U_PV2;
 }
@@ -83,16 +83,17 @@ echo $formattedDate;
         <tr>
             <th>Parameter</th>
             <th>Wert</th>
-            <th>W/kWp</th>
+            <th></th>
         </tr>
-        <tr><td>P_Akku</td><td><?= $pAkku ?></td></tr>
-        <tr><td>P_Grid</td><td><?= $pGrid ?></td></tr>
-        <tr><td>P_Load</td><td><?= $pLoad ?></td></tr>
-        <tr><td>P_PV_AC</td><td><?= $pPV ?></td></tr>
-        <tr><td>P_Balkon_AC</td><td><?= $pBalkon ?></td><td><?= $pBalkon/1.2?></td></tr>
-        <tr><td>SoC</td><td><?= $soc ?>%</td></tr>
-        <tr><td>P_PV1</td><td><?= $P_PV1 ?></td><td><?= $P_PV1/3.96 ?></td></tr>
-        <tr><td>P_PV2</td><td><?= $P_PV2 ?></td><td><?= $P_PV2/6.3  ?></td></tr>
+        <tr><td>P_Akku</td><td><?= $pAkku ?></td><td>negativer Wert = Akku lädt</td></tr>
+        <tr><td>P_Grid</td><td><?= $pGrid ?></td><td>negativer Wert = Einspeisung</td></tr>
+        <tr><td>P_Load</td><td><?= $pLoad ?></td><td>PowerLoad general W Power flowing from inverter to the consumer</td></tr>
+        <tr><td>SoC-internal</td><td><?= $soc ?>%</td><td><?= round($soc/100*2.76*6,2)?> kW</tr>
+        <tr><td>SoC-real</td><td><?= round(($soc - 9) / 91 * 100, 2) ?>%</td><td><?= round(((($soc - 9) / 91 * 100) / 100 * (2.76*6 * 0.91)), 2) ?> kW</tr>
+        <tr><td>P_PV_AC</td><td><?= $pPV ?></td><td><?= round($pPV/10.26,0)?> W/kWp</td></tr>
+        <tr><td>P_Balkon_AC</td><td><?= $pBalkon ?></td><td><?= round($pBalkon/1.2,0)?> W/kWp</td></tr>
+        <tr><td>P_PV1</td><td><?= round($P_PV1,0) ?></td><td><?= round($P_PV1/3.96,0) ?> W/kWp</td></tr>
+        <tr><td>P_PV2</td><td><?= round($P_PV2,0) ?></td><td><?= round($P_PV2/6.3,0)  ?> W/kWp</td></tr>
     </table>
 </body>
 </html>
